@@ -1,0 +1,8 @@
+project_name    = "llmfinetuning"
+environment     = "dev"
+location        = "eastus"
+container_cpu   = 1
+container_memory = "2Gi"
+min_replicas    = 1
+max_replicas    = 3
+# image_reference will be injected by deploy script after pushing image to ACR.

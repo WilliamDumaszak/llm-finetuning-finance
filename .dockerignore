@@ -1,0 +1,28 @@
+# Ignora tudo que não precisa ir para a imagem Docker
+.venv/
+.env
+.DS_Store
+__pycache__/
+*.pyc
+*.pyo
+
+# Dados e artefatos de treino (pesados, não pertencem à imagem de serving)
+data/
+mlruns/
+artifacts/lora-checkpoint/
+
+# O modelo mesclado PRECISA estar na imagem — não ignore artifacts/merged-model/
+
+# Infra e configs de CI
+infra/
+.github/
+tests/
+scripts/train.py
+scripts/evaluate.py
+scripts/export_model.py
+scripts/prepare_data.py
+scripts/deploy_azure.sh
+
+# Arquivos de desenvolvimento
+*.md
+*.example

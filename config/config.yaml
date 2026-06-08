@@ -1,0 +1,54 @@
+base_model:
+  name: "TinyLlama/TinyLlama-1.1B-Chat-v1.0"  # swap: sem gating, mesma arquitetura 1B
+  max_length: 256
+
+dataset:
+  name: "financial_phrasebank"
+  subset: "sentences_allagree"      # highest-confidence labels (all annotators agreed)
+  labels: ["negative", "neutral", "positive"]
+  train_split: 0.8
+  val_split: 0.1
+  test_split: 0.1
+
+lora:
+  r: 8                              # LoRA rank — higher = more params, more capacity
+  alpha: 16                         # LoRA scaling factor
+  dropout: 0.05
+  target_modules:                   # which layers to apply LoRA to
+    - "q_proj"
+    - "v_proj"
+
+training:
+  output_dir: "artifacts/lora-checkpoint"
+  num_epochs: 3
+  per_device_train_batch_size: 4
+  per_device_eval_batch_size: 4
+  gradient_accumulation_steps: 4    # effective batch = 4 * 4 = 16
+  learning_rate: 2.0e-4
+  warmup_ratio: 0.03
+  lr_scheduler_type: "cosine"
+  logging_steps: 10
+  eval_strategy: "epoch"
+  save_strategy: "epoch"
+  load_best_model_at_end: true
+  fp16: false                       # MPS does not support fp16 training
+  bf16: false                       # not supported on all MPS versions
+
+export:
+  merged_model_dir: "artifacts/merged-model"
+
+api:
+  host: "0.0.0.0"
+  port: 8000
+  model_path: "artifacts/merged-model"
+
+mlflow:
+  tracking_uri: "http://localhost:5001"   # local MLflow
+  experiment_name: "llama-financial-sentiment"
+  # Azure ML — set via env vars when deploying to cloud
+  azure_tracking_uri: ""                  # AZURE_MLFLOW_TRACKING_URI
+
+azure:
+  acr_registry: ""                        # AZURE_ACR_REGISTRY
+  resource_group: ""                      # AZURE_RESOURCE_GROUP
+  ml_workspace: ""                        # AZURE_ML_WORKSPACE
