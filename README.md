@@ -134,6 +134,15 @@ Supported auth modes:
 - OIDC: `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_SUBSCRIPTION_ID`
 - Legacy JSON secret: `AZURE_CREDENTIALS`
 
+## Cloud Scope in This Project
+
+This repository follows a local-first training approach and a cloud-first deployment approach.
+
+- Local-first training: data preparation, LoRA fine-tuning, evaluation, and model export are designed to run locally for reproducibility and fast iteration.
+- Cloud-first deployment: infrastructure and API serving are automated on Azure (Terraform + Container Apps + GitHub Actions).
+
+In other words, the cloud layer in this project focuses on production deployment and operations, while training remains intentionally lightweight and developer-centric.
+
 ## Core Design Decisions
 
 - LoRA instead of full fine-tuning to reduce memory and cost
